@@ -1,0 +1,153 @@
+#include "HelloWorldScene.h"
+
+Scene* HelloWorld::createScene()
+{
+    auto scene = Scene::create();
+    
+    auto layer = HelloWorld::create();
+    scene->addChild(layer);
+    
+    return scene;
+}
+
+bool HelloWorld::init()
+{
+    if ( !LayerColor::initWithColor(Color4B(0,255,255,255)))
+    {
+        return false;
+    }
+    // 화면의 사이즈 기준을 잡는다.
+    Size winSize = Director::getInstance()->getWinSize();
+    
+    // 스프라이트 생성(객체 이름,(기준좌표에서 0,0 좌표부터 50,30만큼의 사이즈만 보이기)
+    auto spr = Sprite::create("Icon-57.png", Rect(0,0, 50,50));
+    // 기준 점 설정
+    spr->setAnchorPoint(Point(0.5, 0.5));
+    // 위치 설정
+    spr->setPosition(Point(100, 100));
+    
+    spr->setRotation(45);
+    
+    
+
+    // 화면에 자식객체로 적용
+    this->addChild(spr);
+    
+    // 자식되는 객체, z값,
+    // this->addChild(<#cocos2d::Node *child#>, <#int localZOrder#>)
+    // 자식되는 객체, z값, 태그값
+    // this->addChild(<#cocos2d::Node *child#>, <#int localZOrder#>, <#int tag#>)
+    
+    //this->setPosition(Point(200,200));
+    
+    // 포인트 좌표
+    Point point = Point(240,160);
+    
+    CCLOG("%f:%f",point.x,point.y);
+
+    // 사이즈
+    Size size = Size(100,100);
+
+
+    // 사이즈 관련 메소드
+    // setScale(<#float scale#>);
+    // setScaleX(<#float scaleX#>);
+    // setScaleY(<#float scaleY#>);
+    
+    // 회전 관련 메소드
+    //setRotation(<#float rotation#>);
+    
+    // 반전 관련 메소드
+    // spr->setFlippedX(<#bool flippedX#>); //좌우반전
+    // spr->setFlippedY(<#bool flippedY#>); //상하반전
+    
+    // 투명도 관련 메소드
+    // spr->setOpacity(255); //0이 될 수록 투명해짐
+    
+    // 객체 화면 출력여부 메소드
+    // spr->setVisible(<#bool bVisible#>)
+
+    CCLOG("%f:%f",size.width,size.height);
+    
+    
+    
+    // 실습 부분
+    auto player1 = Sprite::create("grossini.png");
+    player1->setAnchorPoint(Point(0.5,0.5));
+    player1->setPosition(winSize.width/2,winSize.height/2);
+    player1->setScale(3);
+    
+    this->addChild(player1);
+    
+    // 폰트 생성("작성 글","폰트",폰트크기);
+    // auto label = Label::createWithSystemFont(<#const std::string &text#>, <#const std::string &font#>, <#float fontSize#>)
+    // 폰트 생성("작성 글(\n : 텍스트 분할가능)s","폰트",폰트크기,영역크기,좌우정렬::(오른쪽,왼쪽,가운데));
+    // extHAlignment = 좌우정렬
+    // extVAlignment = 상하정렬
+    auto _label = Label::createWithSystemFont("Hello World", "arial", 34,Size(150,150),TextHAlignment::CENTER);
+    _label->setPosition(Point(240,400));
+    this->addChild(_label);
+    
+    auto _label2 = Label::createWithTTF("TTF Test","A Damn Mess.ttf", 34);
+    _label2->setPosition(Point(240,500));
+    this->addChild(_label2);
+    
+    auto _label3 = Label::createWithBMFont("bitmapFontChinese.fnt", "BMFont Test",TextHAlignment::CENTER);
+    _label3->setPosition(Point(240,600));
+    this->addChild(_label3);
+    
+    
+    auto _label4 = Label::createWithCharMap("labelatlas.png",16,32,'.');
+    _label4->setString("012345");
+    _label4->setAnchorPoint(Point(0.5,0.5));
+    _label4->setPosition(Point(240,300));
+    this->addChild(_label4);
+    
+    auto _string = _label4->getString();
+    
+    _label->setColor(Color3B(255,0,0));
+    
+    _label3->enableShadow(Color4B::RED,Size(2,-2));
+    
+    // TTF만 적용가능
+    _label2->enableOutline(Color4B::RED,2);
+    
+    
+    // 메뉴 버튼 생성
+    auto item_1 = MenuItemImage::create("btn-play-normal.png",
+                                        "btn-play-selected.png",CC_CALLBACK_1
+                                        (HelloWorld::menuCallback,this));
+    
+    auto item_2 = MenuItemImage::create("btn-highscores-normal.png",
+                                        "btn-highscores-selected.png",CC_CALLBACK_1
+                                        (HelloWorld::menuCallback,this));
+
+    
+    auto item_3 = MenuItemFont::create("About",CC_CALLBACK_1
+                                        (HelloWorld::menuCallback,this));
+    
+    
+    // Toggle menu // 클릭시 이미지 변경;
+    auto item_4_1 = MenuItemImage::create("btn-play-normal.png",
+                                        "btn-play-selected.png");
+    
+    auto item_4_2 = MenuItemImage::create("btn-highscores-normal.png",
+                                        "btn-highscores-selected.png");
+
+    auto item_4 = MenuItemToggle::createWithCallback(CC_CALLBACK_1(HelloWorld::menuCallback, this),item_4_1,item_4_2,NULL);
+    
+    auto _menu = Menu::create(item_1,item_2,item_3,item_4,NULL);
+    _menu->alignItemsVertically(); // 가운데 정렬
+    this->addChild(_menu);
+    
+    
+    
+    
+    return true;
+}
+
+
+void HelloWorld::menuCallback(Ref *sender)
+{
+    CCLOG("menuCallback!!!");
+}
